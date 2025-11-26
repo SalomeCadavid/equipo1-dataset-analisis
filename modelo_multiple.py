@@ -45,3 +45,24 @@ def modelo_ventas_multiple():
     )
 
     return model, history, scaler_x, scaler_y, X_test, y_test
+def predecir_ventas(modelo, scaler_x, scaler_y, temperatura, promocion, fin_semana):
+    # Crear array con el nuevo dato
+    datos = np.array([[temperatura, promocion, fin_semana]])
+
+    # Normalizar entrada
+    datos_scaled = scaler_x.transform(datos)
+
+    # Predecir
+    pred_scaled = modelo.predict(datos_scaled)
+
+    # Desnormalizar salida
+    pred_real = scaler_y.inverse_transform(pred_scaled)
+
+    return float(pred_real[0][0])
+
+# Prueba rápida (opcional)
+if __name__ == "__main__":
+    model, hist, sx, sy, X_test, y_test = modelo_ventas_multiple()
+    print("Modelo entrenado.")
+    ejemplo = predecir_ventas(model, sx, sy, 30, 1, 0)
+    print("Predicción ejemplo:", ejemplo)
